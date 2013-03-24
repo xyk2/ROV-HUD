@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+<!DOCTYPE html>
+
+<head>
+
+</head>
+
+<body>
+	<video id="video" width="1000" height="600" style='width: 1066px;height: 800px;' autoplay></video>
+
+	<script>
+	window.addEventListener("DOMContentLoaded", function() {
+		var	video = document.getElementById("video"),
+			videoObj = { "video": true },
+			errBack = function(error) {
+				console.log("Video capture error: ", error.code); 
+			};
+
+		if(navigator.getUserMedia) { 
+			navigator.getUserMedia(videoObj, function(stream) {
+				video.src = stream;
+				video.play();
+			}, errBack);
+		} else if(navigator.webkitGetUserMedia) {
+			navigator.webkitGetUserMedia(videoObj, function(stream){
+				video.src = window.webkitURL.createObjectURL(stream);
+				video.play();
+			}, errBack);
+		}
+	}, false);
+	</script>
+
+</body>
+
+</body>
