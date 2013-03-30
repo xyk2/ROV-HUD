@@ -11,7 +11,6 @@
 				$(document).ready(function() {
 				});
 				var sess = null; var wsuri = "ws://" + window.location.hostname + ":9000"; var retryCount = 0; var retryDelay = 2;
-
 				function connect() {
 					statusline = document.getElementById('statusline');
 					sess = new ab.Session(wsuri,
@@ -31,11 +30,9 @@
 						}
 					);
 				}
-
 				window.onload = function () {
 					connect();
-				};
-				
+				};			
 				Array.prototype.clean = function(deleteValue) {
 				  for (var i = 0; i < this.length; i++) {
 					if (this[i] == deleteValue) {         
@@ -45,10 +42,36 @@
 				  }
 				  return this;
 				};
-				
-				
+						
+				TEMP_INDEX = 0;
+				MOTOR_SPEED_START_INDEX = 1;
+				MOTOR_DIRECTION_START_INDEX = 7;
+				IMU_START_INDEX = 17;
+				DEPTH_INDEX = 20;
+				PSI_INDEX = 21;
+				HUMIDITY_INDEX = 22;
+				VOLTAGE_INDEX = 23;
+				CURRENT_INDEX = 24;
+
 				function onAnalogValue(topicUri, data) {
-					console.log(data);
+					var data_array = $.csv.toArray(data);
+					console.log(data_array);
+					$("#temp").html(data_array[TEMP_INDEX]);
+					$(".motor").each(function(index) { 
+						$(this).html(data_array[index+MOTOR_SPEED_START_INDEX]);
+						if(data_array[index+MOTOR_DIRECTION_START_INDEX] == 0) $(this).css('color', '#FF3300');
+						else $(this).css('color', '#33FF66');
+					});
+					$("#roll").html(data_array[IMU_START_INDEX]);
+					$("#yaw").html(data_array[IMU_START_INDEX+1]);
+					$("#pitch").html(data_array[IMU_START_INDEX+2]);
+					
+					$("#depth").html(data_array[DEPTH_INDEX]);
+					$("#psi").html(data_array[PSI_INDEX]);
+					$("#humidity").html(data_array[HUMIDITY_INDEX]);
+					$("#voltage").html(data_array[VOLTAGE_INDEX]);
+					$("#current").html(data_array[CURRENT_INDEX]);
+					
 					
 					
 				}
@@ -78,17 +101,73 @@
    </head>
 	<body style='background:url(sample_background.jpg);'>
 		<div id="statusline" style='display:none;'></div>
-		<p class='data'>DEPTH: <span id='depth'>12.3</span>M</p>
-		<p class='data'>ROLL: <span id='roll'>50</span>°</p>
-		<p class='data'>PITCH: <span id='pitch'>50</span>°</p>
-		<p class='data'>YAW: <span id='yaw'>50</span>°</p>
 		
+		<div style='float:left;position:absolute;margin:10px;'>
+			<p class='data'>DEPTH: <span id='depth'>12.3</span>M</p>
+			<p class='data'>ROLL: <span id='roll'>50</span>°</p>
+			<p class='data'>YAW: <span id='yaw'>50</span>°</p>
+			<p class='data'>PITCH: <span id='pitch'>50</span>°</p>
+		</div>
 		
-		<p class='data' id='date'>2013-MAR-24 13:52:01</p>
+		<div style='float:right;position:absolute;bottom:0;right:0;margin:10px;text-align:right;'>
+			<p class='data'><span id='psi'>14.5</span>PSI</p>
+			<p class='data'><span id='temp'>25</span>C°</p>
+			<p class='data'>HUMIDITY: <span id='humidity'>50</span>%</p>
+		</div>
+		
+		<div style='float:right;position:absolute;bottom:0;margin:10px;'> 
+			<p class='data'><span id='voltage'>12.43</span>V</p>
+			<p class='data'><span id='current'>10.2</span>A</p>
+		</div>	
+		
+		<div id='motor_container' style='right: 0;position: absolute;margin-top: 170px;margin-right:10px;'> 
+			<p class='data'>MTR1: <span class='motor'>0</span></p>
+			<p class='data'>MTR2: <span class='motor'>0</span></p>
+			<p class='data'>MTR3: <span class='motor'>0</span></p>
+			<p class='data'>MTR4: <span class='motor'>0</span></p>
+			<p class='data'>MTR5: <span class='motor'>0</span></p>
+			<p class='data'>MTR6: <span class='motor'>0</span></p>
+		</div>
+		
+		<p class='data' id='date'>2013-JAN-01 00:00:00</p>
 		<p class='data' id='mission_time'>MISSION TIME: <span>3:45</span></p>
 		
 		
-
+		<style type="text/css">
+			.dash { width:2px; height:10px;background-color:white;float:left;margin:0 10px;color:white;}
+			.small { height:10px; }
+			.big { height:15px; }
+			#yaw_container {  position:absolute;}
+			.deg_text {position:absolute;margin-left:-9px;margin-top:10px;}
+		</style>
+		<div id="mask" style="width: 400px;height: 25px;overflow: hidden;position: absolute;margin-left: 400px;margin-top: 50px;">
+			<div id="yaw_container" style="height: 15px;width: 10000px;">
+				<div class="dash small"></div>
+				<div class="dash big"><p class="deg_text">10</p></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash small"></div>
+				<div class="dash big"></div>
+				<div class="dash sm all"></div>
+				<div class="dash big"></div>
+			</div>
+		</div>
 
    </body>
  </html>

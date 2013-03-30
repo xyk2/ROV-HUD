@@ -34,3 +34,11 @@ body {
 	right:0;
 	top:35px;
 }
+
+#motor_container p {
+	font-size:28px !important;
+}
+
+.small_yellow {
+	color:yellow;font-size:30px;
+}
